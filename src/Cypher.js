@@ -1,11 +1,12 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 export const missingRenderPropError =
   "Pass render property to render something. <Cypher render={({pending, error, response} => {})} />";
 export const missingQueryError =
   "A property named 'query' is missing. Component needs a query to be executed.";
 export const missingDriverError =
-  "A property named 'driver' is missing. Component needs a connected driver to send queries over.";
+  "A property or conext object named 'driver' is missing. Component needs a connected driver to send queries over. See <Provider>.";
 
 /**
  * Interface
@@ -19,6 +20,10 @@ export const missingDriverError =
  */
 
 class Cypher extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.driver = props.driver || context.driver;
+  }
   state = {
     result: null,
     pending: false,
@@ -38,11 +43,11 @@ class Cypher extends Component {
     clearInterval(this.interval);
   }
   query(props) {
-    const { driver, query, params = null } = props;
+    const { query, params = null } = props;
     if (!query) throw new Error(missingQueryError);
-    if (!driver) throw new Error(missingDriverError);
+    if (!this.driver) throw new Error(missingDriverError);
     this.setState({ pending: true });
-    const session = driver.session();
+    const session = this.driver.session();
     session
       .run(query, params)
       .then(res => {
@@ -70,5 +75,9 @@ class Cypher extends Component {
     return this.props.render({ ...this.state });
   }
 }
+
+Cypher.contextTypes = {
+  driver: PropTypes.object
+};
 
 export default Cypher;

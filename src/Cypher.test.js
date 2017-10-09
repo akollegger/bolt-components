@@ -5,6 +5,7 @@ import Cypher, {
   missingQueryError,
   missingDriverError
 } from "./Cypher";
+import Provider from "./Provider";
 
 const mockDriver = (spy = () => Promise.resolve()) => ({
   session: () => ({
@@ -31,10 +32,26 @@ it("throws on missing query prop", () => {
   }).toThrowError(missingQueryError);
 });
 
-it("throws on missing driver prop", () => {
+it("throws on missing driver prop and driver context", () => {
   expect(() => {
     TestRenderer.create(<Cypher query="x" render={() => null} />);
   }).toThrowError(missingDriverError);
+});
+
+it("renders with driver as a prop", () => {
+  const out = TestRenderer.create(
+    <Cypher driver={mockDriver()} query="x" render={() => null} />
+  );
+  expect(out.toJSON()).toEqual(null);
+});
+
+it("renders with driver context", () => {
+  const out = TestRenderer.create(
+    <Provider driver={mockDriver()}>
+      <Cypher query="x" render={() => null} />
+    </Provider>
+  );
+  expect(out.toJSON()).toEqual(null);
 });
 
 it("runs cypher query on mount and not on new props", () => {
@@ -44,7 +61,9 @@ it("runs cypher query on mount and not on new props", () => {
 
   // When
   const r = TestRenderer.create(
-    <Cypher driver={mockDriver(spy)} query={query} render={() => null} />
+    <Provider driver={mockDriver(spy)}>
+      <Cypher query={query} render={() => null} />
+    </Provider>
   );
 
   // Then
@@ -53,7 +72,9 @@ it("runs cypher query on mount and not on new props", () => {
 
   // When
   r.update(
-    <Cypher driver={mockDriver(spy)} query={"xxx"} render={() => null} />
+    <Provider driver={mockDriver(spy)}>
+      <Cypher query={"xxx"} render={() => null} />
+    </Provider>
   );
 
   // Then
@@ -70,12 +91,13 @@ it("runs cypher query at an interval", () => {
 
   // When
   const r = TestRenderer.create(
-    <Cypher
-      interval={1} // every second
-      driver={mockDriver(spy)}
-      query={query}
-      render={() => null}
-    />
+    <Provider driver={mockDriver(spy)}>
+      <Cypher
+        interval={1} // every second
+        query={query}
+        render={() => null}
+      />
+    </Provider>
   );
 
   // Then
