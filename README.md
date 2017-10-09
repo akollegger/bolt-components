@@ -9,10 +9,10 @@ const driver = neo4j.driver("bolt://localhost", neo4j.auth.basic("neo4j", "passw
 
 // Pass driver via context for apps
 const App = () => (
-  <Provider driver={driver}>
+  <Provider driver={driver}> // neo4j-driver
     <Cypher
-      query='RETURN rand() as n'
-      render={({pending, error, result}) => {
+      query='RETURN rand() as n' // Cypher query
+      render={({pending, error, result}) => { // Function to be called on render
         return pending ? 'pending' : error ? error.message : result.records[0].get('n')
       }}
     />
@@ -22,9 +22,11 @@ const App = () => (
 // or via props for standalone components
 const App = () => (
   <Cypher
-    driver={driver}
-    query='RETURN rand() as n'
-    render={({pending, error, result}) => {
+    driver={driver} // neo4j-driver (optional)
+    query='RETURN rand() as n' // Cypher query
+    params={{id: 1}} // Params to be passed with the query (optional)
+    interval={10} // Run every 10 seconds (optional)
+    render={({pending, error, result}) => { // Function to be called on render
       return pending ? 'pending' : error ? error.message : result.records[0].get('n')
     }}
   />
@@ -33,17 +35,38 @@ const App = () => (
 render(<App />, document.getElementById('root'))
 ```
 
-## &lt;Cypher> API
+## &lt;Cypher> render property API
 
-```
-<Cypher
-  render = fn to be invoked on any state change in the component
-  query = the query to be executed
-  params = optional params to send with the query
-  interval = run query at an interval (in seconds)
-  driver = connected neo4j-driver (optional, can be sent via context with <Provider> instead)
-/>
+### render ({ pending, error, result, tick })
+This function will be called on every render.
 
+#### Arguments
+
+```javascript
+type obj = {
+  pending: boolean,
+  error: ErrorObject,
+  result: BoltResult,
+  tick: number // auto increasing number
+}
+
+type ErrorObject = {
+  type: string,
+  message: string
+}
+
+type BoltResult = {
+  records: Array<ResultRecord>,
+  summary: SummaryObject
+}
+
+type ResultRecord = {
+  // ...
+}
+
+type SummaryObject = {
+  // ...
+}
 ```
 
 ## Development

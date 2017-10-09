@@ -118,3 +118,79 @@ it("runs cypher query at an interval", () => {
   expect(spy).toHaveBeenLastCalledWith(query, null);
   expect(spy).toHaveBeenCalledTimes(3);
 });
+
+it("passes result argument to render function", () => {
+  // Given
+
+  const renderSpy = jest.fn();
+  renderSpy.mockReturnValue(1);
+  const driverSpy = jest.fn();
+  driverSpy.mockImplementation(() => Promise.resolve(10));
+  const query = "CALL mock";
+
+  // When
+  const r = TestRenderer.create(
+    <Provider driver={mockDriver(driverSpy)}>
+      <Cypher query={query} render={renderSpy} />
+    </Provider>
+  );
+
+  // Then
+  expect(driverSpy).toHaveBeenLastCalledWith(query, null);
+  expect(driverSpy).toHaveBeenCalledTimes(1);
+  expect(renderSpy).toHaveBeenLastCalledWith({
+    pending: true,
+    error: null,
+    result: null,
+    tick: 0
+  });
+  expect(renderSpy).toHaveBeenCalledTimes(2); // Initial render + pending
+
+  // This is needed to flush the promise chain
+  return flushPromises().then(() => {
+    expect(renderSpy).toHaveBeenLastCalledWith({
+      pending: false,
+      error: null,
+      result: 10,
+      tick: 1
+    });
+    expect(renderSpy).toHaveBeenCalledTimes(3);
+  });
+});
+
+it("passes error argument to render function", () => {
+  // Given
+
+  const renderSpy = jest.fn();
+  renderSpy.mockReturnValue(1);
+  const driverSpy = jest.fn();
+  driverSpy.mockImplementation(() => Promise.reject("ERROR"));
+  const query = "CALL mock";
+
+  // When
+  const r = TestRenderer.create(
+    <Provider driver={mockDriver(driverSpy)}>
+      <Cypher query={query} render={renderSpy} />
+    </Provider>
+  );
+
+  // Then
+  expect(driverSpy).toHaveBeenLastCalledWith(query, null);
+  expect(driverSpy).toHaveBeenCalledTimes(1);
+  expect(renderSpy).toHaveBeenCalledTimes(2); // Initial render + pending
+
+  // This is needed to flush the promise chain
+  return flushPromises().then(() => {
+    expect(renderSpy).toHaveBeenLastCalledWith({
+      pending: false,
+      error: "ERROR",
+      result: null,
+      tick: 1
+    });
+    expect(renderSpy).toHaveBeenCalledTimes(3);
+  });
+});
+
+function flushPromises() {
+  return new Promise(resolve => setImmediate(resolve));
+}

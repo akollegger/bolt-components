@@ -26,8 +26,8 @@ class Cypher extends Component {
   }
   state = {
     result: null,
-    pending: false,
-    error: false,
+    pending: true,
+    error: null,
     tick: 0
   };
   componentDidMount() {
@@ -46,26 +46,27 @@ class Cypher extends Component {
     const { query, params = null } = props;
     if (!query) throw new Error(missingQueryError);
     if (!this.driver) throw new Error(missingDriverError);
-    this.setState({ pending: true });
-    const session = this.driver.session();
-    session
-      .run(query, params)
-      .then(res => {
-        this.setState({
-          pending: false,
-          result: res,
-          error: null,
-          tick: this.state.tick + 1
+    this.setState({ pending: true }, () => {
+      const session = this.driver.session();
+      session
+        .run(query, params)
+        .then(res => {
+          this.setState({
+            pending: false,
+            result: res,
+            error: null,
+            tick: this.state.tick + 1
+          });
+        })
+        .catch(error => {
+          this.setState({
+            pending: false,
+            result: null,
+            error: error,
+            tick: this.state.tick + 1
+          });
         });
-      })
-      .catch(error => {
-        this.setState({
-          pending: false,
-          result: null,
-          error: error,
-          tick: this.state.tick + 1
-        });
-      });
+    });
   }
   render() {
     if (!this.props.render) {
