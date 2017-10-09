@@ -27,6 +27,15 @@ class Cypher extends Component {
   };
   componentDidMount() {
     this.query(this.props);
+    if (this.props.interval) {
+      this.interval = setInterval(
+        () => this.query(this.props),
+        this.props.interval * 1000
+      );
+    }
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
   query(props) {
     const { driver, query, params = null } = props;

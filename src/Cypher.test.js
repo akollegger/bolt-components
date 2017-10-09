@@ -60,3 +60,39 @@ it("runs cypher query on mount and not on new props", () => {
   expect(spy).toHaveBeenLastCalledWith(query, null);
   expect(spy).toHaveBeenCalledTimes(1);
 });
+
+it("runs cypher query at an interval", () => {
+  // Given
+  jest.useFakeTimers();
+
+  const spy = jest.fn((query, params) => Promise.resolve());
+  const query = "RETURN rand()";
+
+  // When
+  const r = TestRenderer.create(
+    <Cypher
+      interval={1} // every second
+      driver={mockDriver(spy)}
+      query={query}
+      render={() => null}
+    />
+  );
+
+  // Then
+  expect(spy).toHaveBeenLastCalledWith(query, null);
+  expect(spy).toHaveBeenCalledTimes(1);
+
+  // When
+  jest.runOnlyPendingTimers();
+
+  // Then
+  expect(spy).toHaveBeenLastCalledWith(query, null);
+  expect(spy).toHaveBeenCalledTimes(2);
+
+  // When
+  jest.runOnlyPendingTimers();
+
+  // Then
+  expect(spy).toHaveBeenLastCalledWith(query, null);
+  expect(spy).toHaveBeenCalledTimes(3);
+});
