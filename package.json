@@ -1,11 +1,21 @@
 {
   "name": "bolt-components",
   "version": "0.1.0",
-  "private": true,
+  "main": "dist/main.js",
+  "jsnext:main": "dist/main.es6.js",
   "dependencies": {
+    "prop-types": "^15.6.0"
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node scripts/test.js --env=jsdom"
+  },
+  "license": "GPL-3.0",
+  "devDependencies": {
     "babel-core": "6.25.0",
     "babel-eslint": "7.2.3",
     "babel-jest": "20.0.3",
+    "babel-preset-es2015-rollup": "^3.0.0",
     "babel-preset-react-app": "^3.0.3",
     "babel-runtime": "6.26.0",
     "eslint": "4.4.1",
@@ -16,18 +26,15 @@
     "eslint-plugin-jsx-a11y": "5.1.1",
     "eslint-plugin-react": "7.1.0",
     "jest": "20.0.4",
-    "object-assign": "4.1.1",
-    "promise": "8.0.1",
     "react": "^16.0.0",
     "react-dev-utils": "^4.1.0",
     "react-dom": "^16.0.0",
+    "react-test-renderer": "^16.0.0",
+    "rollup": "^0.50.0",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-commonjs": "^8.2.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
     "whatwg-fetch": "2.0.3"
-  },
-  "scripts": {
-    "test": "node scripts/test.js --env=jsdom"
-  },
-  "devDependencies": {
-    "react-test-renderer": "^16.0.0"
   },
   "jest": {
     "collectCoverageFrom": ["src/**/*.{js,jsx}"],
