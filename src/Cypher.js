@@ -32,7 +32,7 @@ class Cypher extends Component {
     clearInterval(this.interval);
   }
   query(props) {
-    const { query, params = null } = props;
+    const { query, params = undefined } = props;
     if (!query) throw new Error(missingQueryError);
     if (!this.driver) throw new Error(missingDriverError);
     this.setState({ pending: true }, () => {
