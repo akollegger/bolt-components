@@ -16,6 +16,14 @@ Built on `create-react-app` and uses React 16.
 />
 ```
 
+```javascript
+<Provider driver={driver}>
+  // driver is now available in the context
+  <App />
+</Provider>
+
+```
+
 ## Examples
 
 ```javascript
