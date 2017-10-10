@@ -71,7 +71,7 @@ it("runs cypher query on mount and not on new props", () => {
   );
 
   // Then
-  expect(spy).toHaveBeenLastCalledWith(query, null);
+  expect(spy).toHaveBeenLastCalledWith(query, undefined);
   expect(spy).toHaveBeenCalledTimes(1);
 
   // When
@@ -82,7 +82,7 @@ it("runs cypher query on mount and not on new props", () => {
   );
 
   // Then
-  expect(spy).toHaveBeenLastCalledWith(query, null);
+  expect(spy).toHaveBeenLastCalledWith(query, undefined);
   expect(spy).toHaveBeenCalledTimes(1);
 });
 
@@ -105,21 +105,21 @@ it("runs cypher query at an interval", () => {
   );
 
   // Then
-  expect(spy).toHaveBeenLastCalledWith(query, null);
+  expect(spy).toHaveBeenLastCalledWith(query, undefined);
   expect(spy).toHaveBeenCalledTimes(1);
 
   // When
   jest.runOnlyPendingTimers();
 
   // Then
-  expect(spy).toHaveBeenLastCalledWith(query, null);
+  expect(spy).toHaveBeenLastCalledWith(query, undefined);
   expect(spy).toHaveBeenCalledTimes(2);
 
   // When
   jest.runOnlyPendingTimers();
 
   // Then
-  expect(spy).toHaveBeenLastCalledWith(query, null);
+  expect(spy).toHaveBeenLastCalledWith(query, undefined);
   expect(spy).toHaveBeenCalledTimes(3);
 });
 
@@ -144,7 +144,7 @@ it("passes result argument to render function", () => {
 
   // Then
   let tree = r.toJSON();
-  expect(runSpy).toHaveBeenLastCalledWith(query, null);
+  expect(runSpy).toHaveBeenLastCalledWith(query, undefined);
   expect(runSpy).toHaveBeenCalledTimes(1);
   expect(closeSpy).toHaveBeenCalledTimes(0);
   expect(renderSpy).toHaveBeenLastCalledWith({
@@ -192,7 +192,7 @@ it("passes error argument to render function", () => {
 
   // Then
   let tree = r.toJSON();
-  expect(runSpy).toHaveBeenLastCalledWith(query, null);
+  expect(runSpy).toHaveBeenLastCalledWith(query, undefined);
   expect(runSpy).toHaveBeenCalledTimes(1);
   expect(closeSpy).toHaveBeenCalledTimes(0);
   expect(renderSpy).toHaveBeenCalledTimes(2); // Initial render + pending
