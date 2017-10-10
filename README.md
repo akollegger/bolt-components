@@ -3,7 +3,7 @@
 Built on `create-react-app` and uses React 16.
 
 <p>
-  <a href="https://travis-ci.org/oskarhane/suber">
+  <a href="https://travis-ci.org/oskarhane/bolt-components">
     <img src="https://travis-ci.org/oskarhane/bolt-components.svg?branch=master" alt="travis">
   </a>
 </p>
