@@ -123,7 +123,9 @@ it("passes result argument to render function", () => {
   // Given
 
   const renderSpy = jest.fn();
-  renderSpy.mockReturnValue(1);
+  renderSpy.mockImplementation(({ pending, error, result }) => {
+    return pending ? "pending" : error ? error : result;
+  });
   const driverSpy = jest.fn();
   driverSpy.mockImplementation(() => Promise.resolve(10));
   const query = "CALL mock";
@@ -136,6 +138,7 @@ it("passes result argument to render function", () => {
   );
 
   // Then
+  let tree = r.toJSON();
   expect(driverSpy).toHaveBeenLastCalledWith(query, null);
   expect(driverSpy).toHaveBeenCalledTimes(1);
   expect(renderSpy).toHaveBeenLastCalledWith({
@@ -145,9 +148,11 @@ it("passes result argument to render function", () => {
     tick: 0
   });
   expect(renderSpy).toHaveBeenCalledTimes(2); // Initial render + pending
+  expect(tree).toMatchSnapshot();
 
   // This is needed to flush the promise chain
   return flushPromises().then(() => {
+    tree = r.toJSON();
     expect(renderSpy).toHaveBeenLastCalledWith({
       pending: false,
       error: null,
@@ -155,6 +160,7 @@ it("passes result argument to render function", () => {
       tick: 1
     });
     expect(renderSpy).toHaveBeenCalledTimes(3);
+    expect(tree).toMatchSnapshot();
   });
 });
 
@@ -162,7 +168,9 @@ it("passes error argument to render function", () => {
   // Given
 
   const renderSpy = jest.fn();
-  renderSpy.mockReturnValue(1);
+  renderSpy.mockImplementation(({ pending, error, result }) => {
+    return pending ? "pending" : error ? error : result;
+  });
   const driverSpy = jest.fn();
   driverSpy.mockImplementation(() => Promise.reject("ERROR"));
   const query = "CALL mock";
@@ -175,12 +183,15 @@ it("passes error argument to render function", () => {
   );
 
   // Then
+  let tree = r.toJSON();
   expect(driverSpy).toHaveBeenLastCalledWith(query, null);
   expect(driverSpy).toHaveBeenCalledTimes(1);
   expect(renderSpy).toHaveBeenCalledTimes(2); // Initial render + pending
+  expect(tree).toMatchSnapshot();
 
   // This is needed to flush the promise chain
   return flushPromises().then(() => {
+    tree = r.toJSON();
     expect(renderSpy).toHaveBeenLastCalledWith({
       pending: false,
       error: "ERROR",
@@ -188,6 +199,7 @@ it("passes error argument to render function", () => {
       tick: 1
     });
     expect(renderSpy).toHaveBeenCalledTimes(3);
+    expect(tree).toMatchSnapshot();
   });
 });
 
