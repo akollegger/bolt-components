@@ -61,7 +61,6 @@ class Cypher extends Component {
   render() {
     if (!this.props.render) {
       throw new Error(missingRenderPropError);
-      return;
     }
     return this.props.render({ ...this.state });
   }

@@ -1,5 +1,2 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import Cypher from "./Cypher";
-
-ReactDOM.render(<Cypher />, document.getElementById("root"));
+export { default as Cypher } from "./Cypher";
+export { default as Provider } from "./Provider";

@@ -1,21 +1,12 @@
 import React from "react";
 import TestRenderer from "react-test-renderer";
+import { mockDriver } from "../config/test_helpers";
 import Cypher, {
   missingRenderPropError,
   missingQueryError,
   missingDriverError
 } from "./Cypher";
 import Provider from "./Provider";
-
-const mockDriver = (
-  runSpy = () => Promise.resolve(),
-  closeSpy = () => Promise.resolve()
-) => ({
-  session: () => ({
-    run: runSpy,
-    close: closeSpy
-  })
-});
 
 it("renders without crashing", () => {
   const out = TestRenderer.create(

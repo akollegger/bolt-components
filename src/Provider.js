@@ -2,10 +2,6 @@ import { Component } from "react";
 import PropTypes from "prop-types";
 
 class Provider extends Component {
-  constructor(props, context) {
-    super(props, context);
-  }
-
   getChildContext() {
     return {
       driver: this.props.driver
@@ -13,8 +9,7 @@ class Provider extends Component {
   }
 
   render() {
-    const children = this.props.children;
-    return Array.isArray(children) ? children[0] : children;
+    return this.props.children;
   }
 }
 
