@@ -3,17 +3,53 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "babel-core": "6.25.0",
+    "babel-eslint": "7.2.3",
+    "babel-jest": "20.0.3",
+    "babel-preset-react-app": "^3.0.3",
+    "babel-runtime": "6.26.0",
+    "eslint": "4.4.1",
+    "eslint-config-react-app": "^2.0.1",
+    "eslint-loader": "1.9.0",
+    "eslint-plugin-flowtype": "2.35.0",
+    "eslint-plugin-import": "2.7.0",
+    "eslint-plugin-jsx-a11y": "5.1.1",
+    "eslint-plugin-react": "7.1.0",
+    "jest": "20.0.4",
+    "object-assign": "4.1.1",
+    "promise": "8.0.1",
     "react": "^16.0.0",
+    "react-dev-utils": "^4.1.0",
     "react-dom": "^16.0.0",
-    "react-scripts": "1.0.14"
+    "whatwg-fetch": "2.0.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "test": "node scripts/test.js --env=jsdom"
   },
   "devDependencies": {
     "react-test-renderer": "^16.0.0"
+  },
+  "jest": {
+    "collectCoverageFrom": ["src/**/*.{js,jsx}"],
+    "setupFiles": ["<rootDir>/config/polyfills.js"],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.js?(x)",
+      "<rootDir>/src/**/?(*.)(spec|test).js?(x)"
+    ],
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.(js|jsx)$": "<rootDir>/node_modules/babel-jest"
+    },
+    "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web"
+    },
+    "moduleFileExtensions": ["web.js", "js", "json", "web.jsx", "jsx", "node"]
+  },
+  "babel": {
+    "presets": ["react-app"]
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   }
 }
