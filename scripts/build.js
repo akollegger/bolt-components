@@ -12,15 +12,7 @@ const bundles = [
   {
     format: "cjs",
     ext: ".js",
-    plugins: [
-      resolve(),
-      commonjs({
-        include: ["node_modules/**"],
-        namedExports: {
-          "node_modules/prop-types/index.js": ["object", "node"]
-        }
-      })
-    ],
+    plugins: [resolve(), commonjs()],
     babelPresets: ["es2015-rollup", "react-app"],
     babelPlugins: []
   },
@@ -44,7 +36,7 @@ for (const config of bundles) {
     rollup
       .rollup({
         input: "src/index.js",
-        external: ["react"],
+        external: ["react", "prop-types"],
         plugins: [
           babel({
             babelrc: false,
@@ -61,7 +53,8 @@ for (const config of bundles) {
           sourcemap: !config.minify,
           name: config.moduleName,
           globals: {
-            react: "React"
+            react: "React",
+            "prop-types": "PropTypes"
           }
         })
       )
