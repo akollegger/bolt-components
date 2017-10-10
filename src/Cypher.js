@@ -8,17 +8,6 @@ export const missingQueryError =
 export const missingDriverError =
   "A property or conext object named 'driver' is missing. Component needs a connected driver to send queries over. See <Provider>.";
 
-/**
- * Interface
- * <Cypher
- *  render = fn to be invoked on any state change in the component
- *  query = the query to be executed
- *  params = optional params to send with the query
- *  interval = run query at an interval in seconds
- *  driver = connected neo4j-driver
- * />
- */
-
 class Cypher extends Component {
   constructor(props, context) {
     super(props, context);
