@@ -2,6 +2,12 @@
 
 Built on `create-react-app` and uses React 16.
 
+<p>
+  <a href="https://travis-ci.org/oskarhane/suber">
+    <img src="https://travis-ci.org/oskarhane/bolt-components.svg?branch=master" alt="travis">
+  </a>
+</p>
+
 ## Usage
 
 ```javascript
