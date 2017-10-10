@@ -1,12 +1,23 @@
 ## Bolt Components
 
-Built on `create-react-app` and uses React 16.
+Built on `create-react-app` and uses React 16.  
+**For experimental usage only**
 
 <p>
   <a href="https://travis-ci.org/oskarhane/bolt-components">
     <img src="https://travis-ci.org/oskarhane/bolt-components.svg?branch=master" alt="travis">
   </a>
 </p>
+
+## Install and import
+
+```bash
+npm install bolt-components --registry https://neo.jfrog.io/neo/api/npm/npm
+```
+
+```javascript
+import { Cypher, Provider } from 'bolt-components'
+```
 
 ## Usage
 
@@ -103,5 +114,6 @@ type SummaryObject = {
 git clone git@github.com:oskarhane/bolt-components.git bolt-components
 cd bolt-components
 yarn install
+yarn test --coverage
 yarn test
 ```
