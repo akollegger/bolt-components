@@ -7,9 +7,13 @@ import Cypher, {
 } from "./Cypher";
 import Provider from "./Provider";
 
-const mockDriver = (spy = () => Promise.resolve()) => ({
+const mockDriver = (
+  runSpy = () => Promise.resolve(),
+  closeSpy = () => Promise.resolve()
+) => ({
   session: () => ({
-    run: spy
+    run: runSpy,
+    close: closeSpy
   })
 });
 
@@ -126,21 +130,23 @@ it("passes result argument to render function", () => {
   renderSpy.mockImplementation(({ pending, error, result }) => {
     return pending ? "pending" : error ? error : result;
   });
-  const driverSpy = jest.fn();
-  driverSpy.mockImplementation(() => Promise.resolve(10));
+  const closeSpy = jest.fn();
+  const runSpy = jest.fn();
+  runSpy.mockImplementation(() => Promise.resolve(10));
   const query = "CALL mock";
 
   // When
   const r = TestRenderer.create(
-    <Provider driver={mockDriver(driverSpy)}>
+    <Provider driver={mockDriver(runSpy, closeSpy)}>
       <Cypher query={query} render={renderSpy} />
     </Provider>
   );
 
   // Then
   let tree = r.toJSON();
-  expect(driverSpy).toHaveBeenLastCalledWith(query, null);
-  expect(driverSpy).toHaveBeenCalledTimes(1);
+  expect(runSpy).toHaveBeenLastCalledWith(query, null);
+  expect(runSpy).toHaveBeenCalledTimes(1);
+  expect(closeSpy).toHaveBeenCalledTimes(0);
   expect(renderSpy).toHaveBeenLastCalledWith({
     pending: true,
     error: null,
@@ -153,6 +159,7 @@ it("passes result argument to render function", () => {
   // This is needed to flush the promise chain
   return flushPromises().then(() => {
     tree = r.toJSON();
+    expect(closeSpy).toHaveBeenCalledTimes(1);
     expect(renderSpy).toHaveBeenLastCalledWith({
       pending: false,
       error: null,
@@ -171,27 +178,30 @@ it("passes error argument to render function", () => {
   renderSpy.mockImplementation(({ pending, error, result }) => {
     return pending ? "pending" : error ? error : result;
   });
-  const driverSpy = jest.fn();
-  driverSpy.mockImplementation(() => Promise.reject("ERROR"));
+  const runSpy = jest.fn();
+  runSpy.mockImplementation(() => Promise.reject("ERROR"));
+  const closeSpy = jest.fn();
   const query = "CALL mock";
 
   // When
   const r = TestRenderer.create(
-    <Provider driver={mockDriver(driverSpy)}>
+    <Provider driver={mockDriver(runSpy, closeSpy)}>
       <Cypher query={query} render={renderSpy} />
     </Provider>
   );
 
   // Then
   let tree = r.toJSON();
-  expect(driverSpy).toHaveBeenLastCalledWith(query, null);
-  expect(driverSpy).toHaveBeenCalledTimes(1);
+  expect(runSpy).toHaveBeenLastCalledWith(query, null);
+  expect(runSpy).toHaveBeenCalledTimes(1);
+  expect(closeSpy).toHaveBeenCalledTimes(0);
   expect(renderSpy).toHaveBeenCalledTimes(2); // Initial render + pending
   expect(tree).toMatchSnapshot();
 
   // This is needed to flush the promise chain
   return flushPromises().then(() => {
     tree = r.toJSON();
+    expect(closeSpy).toHaveBeenCalledTimes(0); // no closing sessions on error
     expect(renderSpy).toHaveBeenLastCalledWith({
       pending: false,
       error: "ERROR",

@@ -40,6 +40,7 @@ class Cypher extends Component {
       session
         .run(query, params)
         .then(res => {
+          session.close();
           this.setState({
             pending: false,
             result: res,
